@@ -1,9 +1,10 @@
 import { Component, Fragment } from 'react';
 
 import Users from './Users';
+import UsersContext from '../store/users-context';
+import ErrorBoundry from './ErrorBoundry';
 
 import classes from './UserFinder.module.css';
-import UsersContext from '../store/users-context';
 
 class UserFinder extends Component {
   // This would not be an option if there were two contexts connected to the component as contextType can be set only once
@@ -42,7 +43,9 @@ class UserFinder extends Component {
         <div className={classes.finder}>
           <input type='search' onChange={this.searchChangeHandler.bind(this)} />
         </div>
-        <Users users={this.state.filteredUsers} />
+        <ErrorBoundry>
+          <Users users={this.state.filteredUsers} />
+        </ErrorBoundry>
       </Fragment>
     );
   }
