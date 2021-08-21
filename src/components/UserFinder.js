@@ -3,14 +3,13 @@ import { Component, Fragment } from 'react';
 import Users from './Users';
 
 import classes from './UserFinder.module.css';
-
-const DUMMY_USERS = [
-    { id: 'u1', name: 'Max' },
-    { id: 'u2', name: 'Manuel' },
-    { id: 'u3', name: 'Julie' },
-  ];
+import UsersContext from '../store/users-context';
 
 class UserFinder extends Component {
+  // This would not be an option if there were two contexts connected to the component as contextType can be set only once
+  // Another approach is to use .Consumer in render
+  static contextType = UsersContext;
+
   constructor() {
     super();
     this.state = {
@@ -22,14 +21,14 @@ class UserFinder extends Component {
   // Will execute only when the App, consequently UserFinder runs for the first time (like useEffect with no dependency)
   componentDidMount() {
     // fetch the current users list for example
-    this.setState ( { filteredUsers: DUMMY_USERS })
+    this.setState ( { filteredUsers: this.context.users })
   }
   
   // Will execute on each state change (like useEffect for functions with dependencies)
   // This could be handled in searchChangeHandler method as well
   componentDidUpdate(prevProps, prevState) {
     if (prevState.searchTerm !== this.state.searchTerm) {
-      this.setState({ filteredUsers: DUMMY_USERS.filter((user) => user.name.includes(this.state.searchTerm)) });
+      this.setState({ filteredUsers: this.context.users.filter((user) => user.name.includes(this.state.searchTerm)) });
     }
   }
 
